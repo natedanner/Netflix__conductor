@@ -46,7 +46,7 @@ public class TestWorkflowSweeper {
     private ExecutionDAOFacade executionDAOFacade;
     private WorkflowSweeper workflowSweeper;
 
-    private int defaultPostPoneOffSetSeconds = 1800;
+    private final int defaultPostPoneOffSetSeconds = 1800;
 
     @Before
     public void setUp() {
@@ -311,7 +311,6 @@ public class TestWorkflowSweeper {
         TaskDef taskDef = new TaskDef();
         taskDef.setPollTimeoutSeconds(pollTimeout);
         TaskModel taskModel = mock(TaskModel.class);
-        ;
         workflowModel.setTasks(List.of(taskModel));
         when(taskModel.getStatus()).thenReturn(Status.SCHEDULED);
         when(taskModel.getTaskDefinition()).thenReturn(Optional.of(taskDef));

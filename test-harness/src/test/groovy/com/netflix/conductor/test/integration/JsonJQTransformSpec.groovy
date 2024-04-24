@@ -22,13 +22,13 @@ import spock.lang.Shared
 class JsonJQTransformSpec extends AbstractSpecification {
 
     @Shared
-    def JSON_JQ_TRANSFORM_WF = 'test_json_jq_transform_wf'
+    def jsonJqTransformWf = 'test_json_jq_transform_wf'
 
     @Shared
-    def SEQUENTIAL_JSON_JQ_TRANSFORM_WF = 'sequential_json_jq_transform_wf'
+    def sequentialJsonJqTransformWf = 'sequential_json_jq_transform_wf'
 
     @Shared
-    def JSON_JQ_TRANSFORM_RESULT_WF = 'json_jq_transform_result_wf'
+    def jsonJqTransformResultWf = 'json_jq_transform_result_wf'
 
     def setup() {
         workflowTestUtil.registerWorkflows(
@@ -55,7 +55,7 @@ class JsonJQTransformSpec extends AbstractSpecification {
         workflowInput['in2']['array'] = ["c", "d"]
 
         when: "workflow which has the json jq transform task has started"
-        def workflowInstanceId = startWorkflow(JSON_JQ_TRANSFORM_WF, 1,
+        def workflowInstanceId = startWorkflow(jsonJqTransformWf, 1,
                 '', workflowInput, null)
 
         then: "verify that the workflow and task are completed with expected output"
@@ -82,7 +82,7 @@ class JsonJQTransformSpec extends AbstractSpecification {
         workflowInput['in2'] = "b"
 
         when: "workflow which has the json jq transform task has started"
-        def workflowInstanceId = startWorkflow(JSON_JQ_TRANSFORM_WF, 1,
+        def workflowInstanceId = startWorkflow(jsonJqTransformWf, 1,
                 '', workflowInput, null)
 
         then: "verify that the workflow and task failed with expected error"
@@ -126,7 +126,7 @@ class JsonJQTransformSpec extends AbstractSpecification {
         validInput['queryExpression'] = '.input as $_ | { out: ($_.in1.array + $_.in2.array) }'
 
         when: "workflow which has the json jq transform task started"
-        def workflowInstanceId = startWorkflow(JSON_JQ_TRANSFORM_WF, 1,
+        def workflowInstanceId = startWorkflow(jsonJqTransformWf, 1,
                 '', invalidInput, null)
 
         then: "verify that the workflow and task failed with expected error"
@@ -168,7 +168,7 @@ class JsonJQTransformSpec extends AbstractSpecification {
         workflowInput["responseTransform"] = "{result: \"reply: \" + .response.body.message}"
 
         when: "workflow which has the json jq transform task has started"
-        def workflowInstanceId = startWorkflow(SEQUENTIAL_JSON_JQ_TRANSFORM_WF, 1,
+        def workflowInstanceId = startWorkflow(sequentialJsonJqTransformWf, 1,
                 '', workflowInput, null)
 
         then: "verify that the workflow and task are completed with expected output"
@@ -198,7 +198,7 @@ class JsonJQTransformSpec extends AbstractSpecification {
         workflowInput["requestedAction"] = "redeliver"
 
         when: "workflow which has the json jq transform task has started"
-        def workflowInstanceId = startWorkflow(JSON_JQ_TRANSFORM_RESULT_WF, 1,
+        def workflowInstanceId = startWorkflow(jsonJqTransformResultWf, 1,
                 '', workflowInput, null)
 
         then: "verify that the workflow and task are completed with expected output"
@@ -219,7 +219,7 @@ class JsonJQTransformSpec extends AbstractSpecification {
             tasks[2].outputData.containsKey("result") && tasks[0].outputData.containsKey("resultList")
             List<String> result = (List<String>) tasks[2].outputData.get("result")
             assert result.size() == 3
-            assert result.indexOf("redeliver") >= 0
+            assert result.contains("redeliver")
 
             tasks[3].status == Task.Status.COMPLETED
             tasks[3].taskType == 'DECISION'

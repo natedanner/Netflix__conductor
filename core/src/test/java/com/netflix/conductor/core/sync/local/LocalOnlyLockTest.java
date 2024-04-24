@@ -127,9 +127,8 @@ public class LocalOnlyLockTest {
         for (int i = 0; i < 10; i++) {
             final Thread thread =
                     new Thread(
-                            () -> {
-                                localOnlyLock.acquireLock("a", 1000, 100, TimeUnit.MILLISECONDS);
-                            });
+                            () ->
+                                localOnlyLock.acquireLock("a", 1000, 100, TimeUnit.MILLISECONDS));
             thread.start();
             thread.join();
         }

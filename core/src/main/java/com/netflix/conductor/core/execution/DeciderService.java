@@ -159,10 +159,9 @@ public class DeciderService {
         Map<String, TaskModel> tasksToBeScheduled = new LinkedHashMap<>();
 
         preScheduledTasks.forEach(
-                preScheduledTask -> {
+                preScheduledTask ->
                     tasksToBeScheduled.put(
-                            preScheduledTask.getReferenceTaskName(), preScheduledTask);
-                });
+                            preScheduledTask.getReferenceTaskName(), preScheduledTask));
 
         // A new workflow does not enter this code branch
         for (TaskModel pendingTask : pendingTasks) {
@@ -444,16 +443,13 @@ public class DeciderService {
             }
         }
 
-        boolean noPendingSchedule =
-                nonExecutedTasks.stream()
+        return nonExecutedTasks.stream()
                         .parallel()
                         .noneMatch(
                                 wftask -> {
                                     String next = getNextTasksToBeScheduled(workflow, wftask);
                                     return next != null && !taskStatusMap.containsKey(next);
                                 });
-
-        return noPendingSchedule;
     }
 
     List<TaskModel> getNextTask(WorkflowModel workflow, TaskModel task) {
@@ -648,16 +644,15 @@ public class DeciderService {
                         workflowDef.getTimeoutSeconds(),
                         workflowDef.getTimeoutPolicy().name());
 
-        switch (workflowDef.getTimeoutPolicy()) {
-            case ALERT_ONLY:
-                LOGGER.info("{} {}", workflow.getWorkflowId(), reason);
-                Monitors.recordWorkflowTermination(
-                        workflow.getWorkflowName(),
-                        WorkflowModel.Status.TIMED_OUT,
-                        workflow.getOwnerApp());
-                return;
-            case TIME_OUT_WF:
-                throw new TerminateWorkflowException(reason, WorkflowModel.Status.TIMED_OUT);
+        if (workflowDef.getTimeoutPolicy() == WorkflowDef.TimeoutPolicy.ALERT_ONLY) {
+            LOGGER.info("{} {}", workflow.getWorkflowId(), reason);
+            Monitors.recordWorkflowTermination(
+                    workflow.getWorkflowName(),
+                    WorkflowModel.Status.TIMED_OUT,
+                    workflow.getOwnerApp());
+            return;
+        } else if (workflowDef.getTimeoutPolicy() == WorkflowDef.TimeoutPolicy.TIME_OUT_WF) {
+            throw new TerminateWorkflowException(reason, WorkflowModel.Status.TIMED_OUT);
         }
     }
 
@@ -896,7 +891,7 @@ public class DeciderService {
                 && systemTaskRegistry.get(task.getTaskType()).isAsyncComplete(task);
     }
 
-    public static class DeciderOutcome {
+    public static final class DeciderOutcome {
 
         List<TaskModel> tasksToBeScheduled = new LinkedList<>();
         List<TaskModel> tasksToBeUpdated = new LinkedList<>();

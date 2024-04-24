@@ -99,7 +99,7 @@ public class ValidationExceptionMapper {
 
     private String getViolationPath(final ConstraintViolation<?> violation) {
         final String propertyPath = violation.getPropertyPath().toString();
-        return !"".equals(propertyPath) ? propertyPath : "";
+        return "".equals(propertyPath) ? "" : propertyPath;
     }
 
     private String getViolationInvalidValue(final Object invalidValue) {

@@ -268,7 +268,7 @@ public @interface WorkflowTaskTypeConstraint {
                 context.buildConstraintViolationWithTemplate(message).addConstraintViolation();
                 valid = false;
             }
-            if (workflowTask.getLoopOver() == null || workflowTask.getLoopOver().size() == 0) {
+            if (workflowTask.getLoopOver() == null || workflowTask.getLoopOver().isEmpty()) {
                 String message =
                         String.format(
                                 PARAM_REQUIRED_STRING_FORMAT,
@@ -318,9 +318,9 @@ public @interface WorkflowTaskTypeConstraint {
             }
 
             try {
-                if (StringUtils.isNotBlank(duration) && !(duration.startsWith("${"))) {
+                if (StringUtils.isNotBlank(duration) && !duration.startsWith("${")) {
                     DateTimeUtils.parseDuration(duration);
-                } else if (StringUtils.isNotBlank(until) && !(until.startsWith("${"))) {
+                } else if (StringUtils.isNotBlank(until) && !until.startsWith("${")) {
                     DateTimeUtils.parseDate(until);
                 }
             } catch (DateTimeParseException e) {
@@ -433,7 +433,7 @@ public @interface WorkflowTaskTypeConstraint {
                 WorkflowTask workflowTask, ConstraintValidatorContext context) {
             boolean valid = true;
 
-            if (workflowTask.getForkTasks() != null && (workflowTask.getForkTasks().size() == 0)) {
+            if (workflowTask.getForkTasks() != null && (workflowTask.getForkTasks().isEmpty())) {
                 String message =
                         String.format(
                                 "forkTasks should have atleast one task for taskType: %s taskName: %s",

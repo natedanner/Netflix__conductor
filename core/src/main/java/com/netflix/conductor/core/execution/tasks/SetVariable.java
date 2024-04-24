@@ -109,9 +109,8 @@ public class SetVariable extends WorkflowSystemTask {
                 previousValues
                         .keySet()
                         .forEach(
-                                key -> {
-                                    variables.put(key, previousValues.get(key));
-                                });
+                                key ->
+                                    variables.put(key, previousValues.get(key)));
                 newKeys.forEach(variables::remove);
                 task.setStatus(TaskModel.Status.FAILED_WITH_TERMINAL_ERROR);
                 return true;
